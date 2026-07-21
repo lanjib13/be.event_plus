@@ -2,6 +2,13 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const supabase = require("../config/supabase");
 
+const isProduction = process.env.NODE_ENV === "production";
+const authCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+};
+
 const register = async (req, res) => {
   try {
     const { name, email, password, phone, role } = req.body;
@@ -99,9 +106,7 @@ const login = async (req, res) => {
     );
 
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      ...authCookieOptions,
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -124,7 +129,7 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", authCookieOptions);
 
   return res.json({
     success: true,
@@ -210,9 +215,7 @@ const loginAdmin = async (req, res) => {
     );
 
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      ...authCookieOptions,
       maxAge: 24 * 60 * 60 * 1000,
     });
 

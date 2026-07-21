@@ -18,9 +18,32 @@ const uploadRoutes = require("./routes/upload.routes");
 
 const app = express();
 
+const allowedOrigins = new Set(
+  [
+    "http://localhost:3000",
+    "https://event-plus-seven.vercel.app",
+    process.env.FRONTEND_URL,
+    process.env.CORS_ORIGINS,
+  ]
+    .filter(Boolean)
+    .join(",")
+    .split(",")
+    .map((origin) => origin.trim().replace(/\/$/, ""))
+    .filter(Boolean)
+);
+
 app.use(
   cors({
-    origin: "https://event-plus-seven.vercel.app/",
+    origin(origin, callback) {
+      // Requests without an Origin header include server-to-server calls and
+      // health checks, so they do not need browser CORS validation.
+      if (!origin || allowedOrigins.has(origin.replace(/\/$/, ""))) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Origin ${origin} tidak diizinkan oleh CORS`));
+    },
     credentials: true,
   })
 );

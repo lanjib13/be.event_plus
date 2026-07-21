@@ -77,7 +77,12 @@ SUPABASE_URL=your_supabase_url
 SUPABASE_ANON_KEY=your_supabase_anon_key
 MIDTRANS_SERVER_KEY=your_midtrans_server_key
 MIDTRANS_CLIENT_KEY=your_midtrans_client_key
+CORS_ORIGINS=http://localhost:3000,https://event-plus-seven.vercel.app
+FRONTEND_URL=https://event-plus-seven.vercel.app
 ```
+
+`CORS_ORIGINS` menerima beberapa origin yang dipisahkan koma. Tulis origin
+tanpa trailing slash.
 
 ## API Endpoints
 
